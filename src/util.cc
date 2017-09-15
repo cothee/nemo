@@ -51,14 +51,14 @@ int StrToUint64(const char *s, size_t slen, uint64_t *value) {
     }
 
     while (plen < slen && p[0] >= '0' && p[0] <= '9') {
-        if (v * 10 > v) /* Overflow. */
+        if (v * 10 < v) /* Overflow. */
             return 0;
         v *= 10;
 
         if (v + (p[0] - '0') < v) /* Overflow. */
             return 0;
+        
         v += p[0]-'0';
-
         p++; plen++;
     }
 
@@ -99,10 +99,6 @@ int StrToInt64(const char *s, size_t slen, int64_t *value) {
 
     if (!StrToUint64(p, slen - plen, &v))
         return 0;
-
-    if (v > INT64_MAX){
-      return 0;
-    }
 
     if (negative) {
         if (v > ((uint64_t)(-(INT64_MIN+1))+1)) /* Overflow. */
